@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <style>
+        body {
+            background-color: papayawhip;
+            overflow: hidden;
+        }
+
+        #red {
+            width: 20vw;
+            height: 20vw;
+            position: absolute;
+            background-color: coral;
+            color: white;
+        }
+
+    </style>
+</head>
+
+<body>
+    <div id="red"></div>
+    <script>
+        const red = document.querySelector("#red");
+        let redCX = red.clientWidth / 2;
+        let redCY = red.clientHeight / 2;
+        let mouseX, mouseY;
+        let redPX, redPY;
+        let steps = 30;
+
+        document.addEventListener("DOMContentLoaded", init);
+
+        function init() {
+            document.addEventListener("mousemove", mouseMove);
+            moveRAF();
+        }
+
+        function mouseMove(e) {
+            mouseX = e.pageX;
+            mouseY = e.pageY;
+        }
+
+        function moveRAF() {
+            redPX = red.offsetLeft;
+            redPY = red.offsetTop;
+
+            redPX += (mouseX - redPX - redCX) / steps;
+            redPY += (mouseY - redPY - redCY) / steps;
+
+            red.style.left = redPX + "px";
+            red.style.top = redPY + "px";
+
+            requestAnimationFrame(moveRAF);
+        }
+
+    </script>
+</body>
+
+</html>
