@@ -48,7 +48,6 @@
             top: 20vw;
             right: 5vw;
         }
-
     </style>
 </head>
 
@@ -88,12 +87,11 @@
             plate.style.left = platePX + "px";
             plate.style.top = platePY + "px";
 
-            //snapX = target1.offsetLeft + ((target1.clientWidth - plate.clientWidth) / 2);
-            //snapY = target1.offsetTop + ((target1.clientHeight - plate.clientHeight) / 2);
+
             snapX = target1.offsetLeft + (target1.offsetWidth / 2) - (plate.offsetWidth / 2);
             snapY = target1.offsetTop + (target1.offsetHeight / 2) - (plate.offsetHeight / 2);
 
-            // listeners
+
 
             plate.addEventListener('touchstart', onTouchStart);
             plate.addEventListener('mousedown', onPlateMouseDown);
@@ -101,34 +99,34 @@
 
 
         function onAnimationFrame() {
-            // where are you right now
+
             platePX = plate.offsetLeft;
             platePY = plate.offsetTop;
 
-            // Step you need to add: (real target - src) / steps
+
             platePX += ((mouseX - x_plate) - platePX) / steps;
             platePY += ((mouseY - y_plate) - platePY) / steps;
 
-            //restict horizontally
+
             if (platePX < 0) platePX = 0;
             else if (platePX > container.clientWidth - plate.clientWidth) platePX = container.clientWidth - plate.clientWidth;
 
-            //restict vertically
+
             if (platePY < 0) platePY = 0;
             else if (platePY > container.clientHeight - plate.clientHeight) platePY = container.clientHeight - platePY.clientHeight;
 
-            //set the transform
+
             plate.style.left = platePX + "px";
             plate.style.top = platePY + "px";
 
-            RAF = requestAnimationFrame(onAnimationFrame); // do it again fast
+            RAF = requestAnimationFrame(onAnimationFrame);
         }
 
         function handleDragStart(x, y) {
             input.dragging = true;
             mouseX = x;
             mouseY = y;
-            //where about is it clicked = distance from mousepos. to elementpos.
+
             x_plate = mouseX - plate.offsetLeft;
             y_plate = mouseY - plate.offsetTop;
             console.log("start", input.dragging);
@@ -163,8 +161,7 @@
                         plate.style.transform = 'translate(' + snapX + 'px,' + snapY + 'px) translateZ(0) scale(1)';
                         plate.style.transition = "background 1s";
                         plate.style.background = "tomato";
-                        //plate.style.left = snapX + "px";
-                        //plate.style.top = snapY + "px";
+
                         plate.removeEventListener('touchstart', onTouchStart);
                         plate.removeEventListener('mousedown', onPlateMouseDown);
                     }
@@ -174,10 +171,6 @@
             });
         }
 
-
-        /*
-         **************************** Events
-         */
 
         function onPlateMouseDown(event) {
             event.preventDefault();

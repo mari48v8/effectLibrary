@@ -32,7 +32,6 @@
             width: 25vw;
             height: 25vw;
         }
-
     </style>
 </head>
 
@@ -48,12 +47,6 @@
     </div>
     <script>
         document.addEventListener("DOMContentLoaded", init);
-
-        /**
-         * Thank you very much for heavyinspiration
-         * Hans Eklund, North Kingdom
-         * https://codepen.io/hanseklund/pen/qDxvo
-         */
 
         var input = {
             dragging: false
@@ -75,40 +68,39 @@
             plate.style.left = platePX + "px";
             plate.style.top = platePY + "px";
 
-            // listeners
             plate.addEventListener('touchstart', onTouchStart);
             plate.addEventListener('mousedown', onMouseDown);
         }
 
         function onAnimationFrame() {
-            // where are you right now
+
             platePX = plate.offsetLeft;
             platePY = plate.offsetTop;
 
-            // Step you need to add: (real target - src) / steps
+
             platePX += ((mouseX - x_plate) - platePX) / steps;
             platePY += ((mouseY - y_plate) - platePY) / steps;
 
-            //restict horizontally
+
             if (platePX < 0) platePX = 0;
             else if (platePX > container.clientWidth - plate.clientWidth) platePX = container.clientWidth - plate.clientWidth;
 
-            //restict vertically
+
             if (platePY < 0) platePY = 0;
             else if (platePY > container.clientHeight - plate.clientHeight) platePY = container.clientHeight - platePY.clientHeight;
 
-            //set the transform
+
             plate.style.left = platePX + "px";
             plate.style.top = platePY + "px";
 
-            RAF = requestAnimationFrame(onAnimationFrame); // do it again fast
+            RAF = requestAnimationFrame(onAnimationFrame);
         }
 
         function handleDragStart(x, y) {
             input.dragging = true;
             mouseX = x;
             mouseY = y;
-            //where about is it clicked = distance from mousepos. to elementpos.
+
             x_plate = mouseX - plate.offsetLeft;
             y_plate = mouseY - plate.offsetTop;
             console.log("start", input.dragging);
@@ -131,9 +123,6 @@
             console.log("stop", input.dragging);
         }
 
-        /*
-         ******************************** Events
-         */
 
         function onMouseDown(event) {
             event.preventDefault();

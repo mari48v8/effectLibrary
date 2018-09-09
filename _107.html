@@ -30,7 +30,6 @@
             width: 90vw;
             height: 90vh;
         }
-
     </style>
 </head>
 
@@ -46,12 +45,6 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", init);
-
-        /**
-         * Thank you very much for inspiration mouse touch pointer
-         * Hans Eklund, North Kingdom
-         * https://codepen.io/hanseklund/pen/qDxvo
-         */
 
         var dragging = false;
         var startX = 0;
@@ -70,15 +63,11 @@
             plateWidth = plate.getBoundingClientRect().width;
             plateHeight = plate.getBoundingClientRect().height;
 
-            // listeners
+
             plate.addEventListener('touchstart', onTouchStart);
             plate.addEventListener('mousedown', onPlateMouseDown);
         }
 
-
-        /*
-         * Events
-         */
 
         function onPlateMouseDown(event) {
             event.preventDefault();
