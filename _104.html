@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <title>Mouse And Touch</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <style>
+        html,
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            padding: 0;
+            margin: 0;
+        }
+
+        #container {
+            position: relative;
+            background: aliceblue;
+            width: 100vw;
+            height: 90vh;
+        }
+
+        #plate {
+            position: absolute;
+            background: cornflowerblue;
+            border: 4px solid darkblue;
+            width: 25vw;
+            height: 25vw;
+        }
+
+    </style>
+</head>
+
+<body>
+    <div id="container">
+        <div>
+            <ul>
+                <li>Touch: One finger drag to move</li>
+                <li>Mouse: click and drag to move</li>
+            </ul>
+        </div>
+        <div id="plate"></div>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", init);
+
+        /**
+         * Thank you very much for heavyinspiration
+         * Hans Eklund, North Kingdom
+         * https://codepen.io/hanseklund/pen/qDxvo
+         */
+
+        var input = {
+            dragging: false
+        };
+        let container, plate;
+        let platePX, platePY;
+        let x_plate, y_plate;
+        let mouseX, mouseY;
+        let RAF;
+        let steps = 20;
+
+        function init() {
+            container = document.querySelector('#container');
+            plate = document.querySelector('#plate');
+
+            platePX = (container.clientWidth * 0.5) - (plate.clientWidth / 2);
+            platePY = (container.clientHeight * 0.5) - (plate.clientHeight / 2);
+
+            plate.style.left = platePX + "px";
+            plate.style.top = platePY + "px";
+
+            // listeners
+            plate.addEventListener('touchstart', onTouchStart);
+            plate.addEventListener('mousedown', onMouseDown);
+        }
+
+        function onAnimationFrame() {
+            // where are you right now
+            platePX = plate.offsetLeft;
+            platePY = plate.offsetTop;
+
+            // Step you need to add: (real target - src) / steps
+            platePX += ((mouseX - x_plate) - platePX) / steps;
+            platePY += ((mouseY - y_plate) - platePY) / steps;
+
+            //restict horizontally
+            if (platePX < 0) platePX = 0;
+            else if (platePX > container.clientWidth - plate.clientWidth) platePX = container.clientWidth - plate.clientWidth;
+
+            //restict vertically
+            if (platePY < 0) platePY = 0;
+            else if (platePY > container.clientHeight - plate.clientHeight) platePY = container.clientHeight - platePY.clientHeight;
+
+            //set the transform
+            plate.style.left = platePX + "px";
+            plate.style.top = platePY + "px";
+
+            RAF = requestAnimationFrame(onAnimationFrame); // do it again fast
+        }
+
+        function handleDragStart(x, y) {
+            input.dragging = true;
+            mouseX = x;
+            mouseY = y;
+            //where about is it clicked = distance from mousepos. to elementpos.
+            x_plate = mouseX - plate.offsetLeft;
+            y_plate = mouseY - plate.offsetTop;
+            console.log("start", input.dragging);
+            onAnimationFrame();
+        }
+
+        function handleDragging(x, y) {
+            console.log("while", x, y);
+            if (input.dragging) {
+                mouseX = x;
+                mouseY = y;
+            }
+        }
+
+        function handleDragStop() {
+            if (input.dragging) {
+                cancelAnimationFrame(RAF);
+                dragging = false;
+            }
+            console.log("stop", input.dragging);
+        }
+
+        /*
+         ******************************** Events
+         */
+
+        function onMouseDown(event) {
+            event.preventDefault();
+            document.addEventListener('mouseup', onDocumentMouseUp);
+            document.addEventListener('mousemove', onDocumentMouseMove);
+            handleDragStart(event.clientX, event.clientY);
+        }
+
+        function onDocumentMouseMove(event) {
+            if (input.dragging) handleDragging(event.clientX, event.clientY);
+        }
+
+        function onDocumentMouseUp(event) {
+            document.removeEventListener('mouseup', onDocumentMouseUp);
+            document.removeEventListener('mousemove', onDocumentMouseMove);
+            event.preventDefault();
+            handleDragStop();
+        }
+
+        function onTouchStart(event) {
+            event.preventDefault();
+            if (event.touches.length === 1) {
+                handleDragStart(event.touches[0].clientX, event.touches[0].clientY);
+                document.addEventListener('touchmove', onTouchMove);
+                document.addEventListener('touchend', onTouchEnd);
+                document.addEventListener('touchcancel', onTouchEnd);
+            }
+        }
+
+        function onTouchMove(event) {
+            event.preventDefault();
+            if (event.touches.length === 1) {
+                handleDragging(event.touches[0].clientX, event.touches[0].clientY);
+            }
+        }
+
+        function onTouchEnd(event) {
+            event.preventDefault();
+            if (event.touches.length === 0) {
+                handleDragStop(input.dragX, input.dragY);
+                document.removeEventListener('touchmove', onTouchMove);
+                document.removeEventListener('touchend', onTouchEnd);
+                document.removeEventListener('touchcancel', onTouchEnd);
+            }
+        }
+
+    </script>
+
+</body>
+
+</html>
